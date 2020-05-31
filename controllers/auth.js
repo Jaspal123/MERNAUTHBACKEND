@@ -9,7 +9,7 @@ exports.signup = (req,res) => {
     User.findOne({email}).exec((err,user) => {
         if(user){
             return res.status(400).json({
-                err:'Email taken'
+                error:'Email taken'
             })
         }
 
