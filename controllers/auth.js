@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken')
+const expressJwt = require('express-jwt')
 const sgMail = require('@sendgrid/mail')
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 exports.signup = (req,res) => {
@@ -106,5 +108,28 @@ exports.signin = (req,res) => {
             token,
             user:{ _id,name,email,role}
         })
+    })
+}
+
+exports.requireSignin = expressJwt({
+    secret: process.env.JWT_SECRET
+})
+
+exports.adminMiddleware = (req,res,next) => {
+    User.findById(req.user._id).exec((err,user)=>{
+        if(err || !user){
+            return res.status(400).json({
+                error: 'User not found.'
+            })
+        }
+
+        if(user.role !== 'admin'){
+            return res.status(400).json({
+                error: 'Admin resource. Access denied'
+            })
+        }
+
+        req.profile = user;
+        next();
     })
 }
