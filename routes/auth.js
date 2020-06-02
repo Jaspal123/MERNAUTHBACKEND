@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 // import controllers
-const {signup, signin ,accountActivation, forgotPassword, resetPassword} = require('../controllers/auth');
+const {signup, signin ,accountActivation, forgotPassword, resetPassword,googleLogin} = require('../controllers/auth');
 
 // import validators
 const {userSignupValidator, userSigninValidator, forgotPasswordValidator, resetPasswordValidator} = require('../validators/auth')
@@ -19,5 +19,7 @@ router.post('/account-activation', accountActivation)
 router.put('/forgot-password', forgotPasswordValidator, runValidation, forgotPassword)
 router.put('/reset-password', resetPasswordValidator, runValidation, resetPassword)
 
+// google and facebook
+router.post('/google-login', googleLogin)
 
 module.exports = router;
